@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ALEXIX SİSTEM</title>
+<style>
+:root{--bg:#050507;--panel:#0c0c12;--panel2:#111119;--red:#ff2442;--red2:#8e1020;--text:#f5f5f7;--muted:#92929d;--line:#292933;--ok:#42e88b}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif;overflow-x:hidden}body:before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(circle at 50% 0,#3b0710 0,#0b090e 30%,#020204 75%)}body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(115deg,transparent 42%,rgba(255,20,50,.055),transparent 58%);animation:scan 8s linear infinite}@keyframes scan{0%{transform:translateX(-45%)}100%{transform:translateX(45%)}}
+header{height:72px;position:sticky;top:0;z-index:30;display:flex;align-items:center;padding:0 20px;background:#08080cdd;border-bottom:1px solid #35101a;backdrop-filter:blur(16px)}.menu{width:46px;font-size:29px;color:var(--red);cursor:pointer;user-select:none}.logo{font-weight:900;letter-spacing:4px;font-size:21px}.header-right{margin-left:auto;display:flex;gap:9px}.mini{border:1px solid var(--line);background:#101017;color:#ddd;padding:9px 13px;border-radius:9px;cursor:pointer}.mini:hover{border-color:var(--red)}
+.drawer{position:fixed;top:0;left:-330px;width:315px;height:100vh;background:#08080dfa;border-right:1px solid #641322;z-index:50;padding:25px;transition:.3s;box-shadow:25px 0 70px #000}.drawer.open{left:0}.close{text-align:right;font-size:30px;color:var(--red);cursor:pointer}.drawer h2{letter-spacing:4px}.nav{display:block;text-decoration:none;color:#ddd;background:#111119;border:1px solid #1d1d26;padding:14px;border-radius:10px;margin:8px 0}.nav:hover{background:#310b12;border-color:#6f1422}.menu-cats{display:flex;flex-direction:column;gap:7px;margin:14px 0 18px;max-height:62vh;overflow:auto}.catnav{display:flex;justify-content:space-between;align-items:center;text-align:left;width:100%;padding:11px 12px;background:#101017;border:1px solid #22222c;color:#ddd;border-radius:9px;cursor:pointer}.catnav:hover,.catnav.active{background:#310b12;border-color:#7d1728;color:#fff}.catnav span{font-size:11px;color:#777}.cmd-no{color:#666;font-size:11px;min-width:28px}.cmd-main{flex:1}.cmd code{display:block;margin-bottom:3px}.overlay{display:none;position:fixed;inset:0;background:#0009;z-index:40}.overlay.show{display:block}
+.hero{min-height:calc(100vh - 72px);display:flex;align-items:center;justify-content:center;text-align:center;padding:50px 20px}.badge{display:inline-block;border:1px solid #7b1624;color:#ff4960;padding:8px 14px;border-radius:99px;font-size:11px;letter-spacing:2px}.hero h1{font-size:clamp(46px,10vw,94px);letter-spacing:9px;line-height:.95;margin:24px 0 16px;text-shadow:0 0 35px #ff092855}.hero h1 span{display:block}.sub{max-width:700px;margin:auto;color:#a8a8b2;line-height:1.7}.actions{margin-top:28px}.btn{padding:14px 23px;border:1px solid #a7182b;background:#d30b26;color:#fff;border-radius:10px;font-weight:800;cursor:pointer;box-shadow:0 0 24px #65071455;margin:5px}.btn:hover{transform:translateY(-1px);filter:brightness(1.1)}.btn.alt{background:#111118;border-color:#393943;box-shadow:none}
+.section{max-width:1120px;margin:auto;padding:85px 22px;scroll-margin-top:80px}.section-head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:30px}.eyebrow{font-size:11px;letter-spacing:3px;color:#ff4a60}.section h2{font-size:34px;margin:7px 0}.section p{color:var(--muted)}.status{border:1px solid #1f6a43;color:#77eeb0;background:#082014;padding:9px 13px;border-radius:999px;font-size:12px}.status i{display:inline-block;width:7px;height:7px;background:var(--ok);border-radius:50%;margin-right:7px;box-shadow:0 0 12px var(--ok)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:linear-gradient(145deg,#111118,#0a0a0f);border:1px solid var(--line);border-radius:17px;padding:24px;box-shadow:0 15px 45px #0007}.card.hot{border-color:#851526;box-shadow:0 0 35px #65071644}.price{font-size:36px;font-weight:900;color:#ff3d57;margin:14px 0}.card ul{padding-left:20px;color:#b5b5bf;line-height:1.9}.feature b{font-size:17px;display:block;margin-bottom:8px}.feature span{color:#888895;font-size:14px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}.input{flex:1;min-width:220px;background:#0d0d13;border:1px solid var(--line);color:#fff;padding:13px 15px;border-radius:10px;outline:none}.input:focus{border-color:#9e1a2d}.select{background:#0d0d13;border:1px solid var(--line);color:#ddd;padding:13px;border-radius:10px}.commands{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}.cmd{background:#0c0c12;border:1px solid #22222c;border-radius:11px;padding:15px;display:flex;align-items:center;justify-content:space-between;gap:15px}.cmd code{color:#ff5369;font-weight:800}.cmd small{color:#777783}.run{background:#171720;color:#eee;border:1px solid #343440;padding:8px 11px;border-radius:8px;cursor:pointer}.run:hover{border-color:var(--red)}
+.console{margin-top:22px;background:#07070b;border:1px solid #282832;border-radius:14px;overflow:hidden}.console-top{padding:11px 14px;border-bottom:1px solid #22222a;color:#888;font-size:12px}.console-body{padding:18px;min-height:105px;color:#bbb;font-family:monospace;white-space:pre-wrap}.console-body .red{color:#ff4a60}.console-body .green{color:#64e7a0}
+.contact{display:grid;grid-template-columns:1fr 1fr;gap:18px}.field{display:block;margin:10px 0;color:#aaa;font-size:13px}.field input,.field textarea{width:100%;margin-top:7px;background:#0d0d13;border:1px solid var(--line);color:#fff;padding:12px;border-radius:9px;outline:none}.field textarea{min-height:130px;resize:vertical}.empty{padding:28px;text-align:center;color:#777;border:1px dashed #333;border-radius:12px;grid-column:1/-1}footer{text-align:center;color:#666;border-top:1px solid #1c1c23;padding:45px 20px}.modal{display:none;position:fixed;inset:0;z-index:70;align-items:center;justify-content:center;background:#000b;padding:20px}.modal.show{display:flex}.modal-box{width:min(440px,100%);background:#0d0d13;border:1px solid #58101d;border-radius:16px;padding:25px;box-shadow:0 20px 80px #000}.modal-head{display:flex;justify-content:space-between;align-items:center}.x{cursor:pointer;color:#ff4058;font-size:24px}.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#111118;border:1px solid #721425;color:#fff;padding:13px 18px;border-radius:11px;z-index:100;transition:.25s;box-shadow:0 12px 45px #000}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.commands{grid-template-columns:1fr}.contact{grid-template-columns:1fr}.section-head{align-items:start;flex-direction:column}.header-right .mini:first-child{display:none}}
+ .purchase-box{text-align:center;padding:8px 0 18px}.purchase-box h3{margin:4px 0 12px}.contact-phone{display:block;font-size:22px;font-weight:800;color:var(--red);text-decoration:none;margin:16px 0}.muted{color:var(--muted);font-size:13px;line-height:1.5}</style>
+
+<style id="alexix-enhancements">
+.enhance-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}
+.stat{padding:16px;border:1px solid var(--line);background:linear-gradient(145deg,#101018,#09090e);border-radius:14px}
+.stat b{display:block;font-size:24px}.stat span{color:var(--muted);font-size:12px}
+.quick-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.quick-actions button{border:1px solid var(--line);background:#111118;color:var(--text);padding:10px 14px;border-radius:10px;cursor:pointer}
+.quick-actions button:hover{border-color:var(--red);transform:translateY(-1px)}
+.floating{position:fixed;right:18px;bottom:18px;z-index:40;display:flex;flex-direction:column;gap:9px}
+.float-btn{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:#101017;color:#fff;cursor:pointer;box-shadow:0 10px 30px #0008}
+.float-btn:hover{border-color:var(--red)}
+.purchase-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.purchase-actions a,.purchase-actions button{display:flex;align-items:center;justify-content:center;min-height:44px;text-decoration:none}
+.copy-btn{border:1px solid var(--line);background:#111118;color:#fff;border-radius:10px;cursor:pointer}
+.demo-note{font-size:12px;color:var(--muted);padding:10px 12px;border:1px dashed var(--line);border-radius:10px;margin-top:12px}
+@media(max-width:760px){.enhance-bar{grid-template-columns:repeat(2,1fr)}.floating{right:12px;bottom:12px}.purchase-actions{grid-template-columns:1fr}}
+</style>
+
+<style id="nested-command-ui">
+.drawer-sub{color:#888;font-size:12px;line-height:1.55;margin:-4px 0 18px}.main-nav{display:flex;flex-direction:column;gap:9px}.big-nav{display:flex;align-items:center;gap:12px;text-align:left;width:100%;font-size:15px}.big-nav span{flex:1}.big-nav b{font-size:22px;color:#777;font-weight:400}.nested-panel{animation:slideIn .22s ease}.nested-title{font-size:12px;letter-spacing:3px;color:#ff5269;margin:18px 0 5px;font-weight:800}.nested-help{font-size:12px;color:#777;line-height:1.5}.back-btn{width:100%;text-align:left;background:#111118;border:1px solid #292933;color:#ddd;padding:11px 12px;border-radius:9px;cursor:pointer}.back-btn:hover{border-color:#8b182a}.category-list,.command-list-mini{display:flex;flex-direction:column;gap:8px;margin-top:12px;max-height:65vh;overflow:auto;padding-right:3px}.category-list button,.mini-command{width:100%;display:flex;align-items:center;gap:10px;text-align:left;background:#101017;border:1px solid #25252f;color:#eee;padding:12px;border-radius:10px;cursor:pointer}.category-list button:hover,.mini-command:hover{background:#310b12;border-color:#7d1728}.category-list button span:last-child{margin-left:auto;color:#777;font-size:11px}.mini-command code{color:#ff5369;font-weight:800;font-size:13px}.mini-command small{display:block;color:#777;margin-top:3px}.mini-command .mini-arrow{margin-left:auto;color:#666;font-size:18px}.command-list-mini{max-height:66vh}.drawer [hidden]{display:none!important}
+@keyframes slideIn{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:translateX(0)}}
+.command-entry{padding:4px 0 8px}.command-entry p{color:#999;font-size:13px;line-height:1.5}.command-input{width:100%;background:#09090e;border:1px solid #30303b;color:#fff;padding:13px;border-radius:9px;outline:none;margin:8px 0}.command-input:focus{border-color:#a31b30}.command-run{width:100%;margin-top:6px}.demo-safe{font-size:11px;color:#777;line-height:1.5;margin-top:10px}
+</style>
+
+<style id="alexix-music-css">
+.music-toggle{border:1px solid #2a2a35;background:#101017;color:#eee;padding:9px 13px;border-radius:9px;cursor:pointer;font-weight:700}
+.music-toggle:hover{border-color:var(--red)}
+.music-panel{position:fixed;right:18px;top:78px;width:min(360px,calc(100vw - 28px));background:#09090e;border:1px solid #3a111b;border-radius:14px;box-shadow:0 20px 70px #000;z-index:80;display:none;overflow:hidden}
+.music-panel.show{display:block;animation:slideDown .18s ease}
+.music-head{padding:14px 16px;border-bottom:1px solid #292933;display:flex;align-items:center;gap:10px}
+.music-head strong{flex:1}.music-close{cursor:pointer;color:#ff5269;font-size:20px}
+.music-now{padding:13px 16px;background:#100b0e}.music-now small{display:block;color:#777;margin-bottom:4px}.music-now b{color:#ff5269}
+.music-controls{display:flex;gap:7px;padding:10px 16px;border-bottom:1px solid #292933}.music-controls button{flex:1;background:#15151d;color:#eee;border:1px solid #2a2a35;border-radius:8px;padding:9px;cursor:pointer}.music-controls button:hover{border-color:#a31b30}
+.music-player{margin:0 12px 10px;border:1px solid #292933;border-radius:10px;overflow:hidden;background:#050507;aspect-ratio:16/9;position:relative}.music-player iframe{width:100%;height:100%;border:0;display:none}.player-placeholder{height:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;color:#777;font-size:12px}.music-player.ready iframe{display:block}.music-player.ready .player-placeholder{display:none}
+.music-list{max-height:310px;overflow:auto;padding:10px}.track{display:flex;align-items:center;gap:9px;padding:9px 10px;border:1px solid transparent;border-radius:9px;cursor:pointer}.track:hover,.track.active{background:#230a10;border-color:#631322}.track-num{width:25px;color:#666;font-size:11px}.track-name{flex:1;font-size:13px}.track-play{color:#ff5269;font-weight:800}.music-note{padding:8px 12px 12px;color:#666;font-size:10px;line-height:1.4}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:800px){.music-toggle{padding:8px 10px;font-size:12px}.music-panel{right:10px;top:70px}}
+</style>
+
+<style id="alexix-dashboard-v2">
+.dashboard-shell{max-width:1180px;margin:0 auto;padding:34px 22px 10px}.dash-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}.dash-brand{font-size:28px;font-weight:900;letter-spacing:2px}.dash-brand span{color:#2d83ff}.user-chip{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#151b24;border:1px solid #243141;border-radius:12px}.avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#23364e;color:#7eb1ff;font-weight:900}.role{font-size:11px;color:#8ea0b5}.dash-grid{display:grid;grid-template-columns:250px 1fr;gap:18px}.side-card,.stat-card,.premium-box,.free-box,.owner-box{background:#121a23;border:1px solid #22303d;border-radius:18px;box-shadow:0 14px 40px #0005}.side-card{padding:18px}.profile-big{padding:18px;background:#18232e;border-radius:15px;margin-bottom:15px}.profile-big .name{font-size:20px;font-weight:900}.profile-big .balance{color:#8795a5;font-size:13px;margin-top:5px}.side-link{width:100%;padding:12px 13px;border:0;background:transparent;color:#a9b3bf;border-radius:10px;text-align:left;cursor:pointer;font-size:14px}.side-link:hover,.side-link.active{background:#1a3158;color:#63a0ff}.dash-main{min-width:0}.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.stat-card{padding:20px}.stat-card small{color:#8794a3}.stat-card strong{display:block;font-size:30px;margin-top:9px}.stat-card .trend{display:inline-block;margin-top:10px;border:1px solid #31588e;color:#5e9aff;padding:7px 10px;border-radius:10px}.panel-section{margin-top:18px}.panel-section h3{margin:0 0 5px}.panel-section p{color:#8794a3;margin-top:0}.tier-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.free-box,.premium-box{padding:20px}.free-box{border-color:#244e74}.premium-box{border-color:#694c12}.box-title{display:flex;align-items:center;justify-content:space-between}.tag{padding:6px 9px;border-radius:999px;font-size:10px;font-weight:800}.tag.free{background:#153653;color:#6db0ff}.tag.premium{background:#4a3510;color:#ffc85c}.command-preview{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.preview-cmd{padding:11px;background:#0d141c;border:1px solid #24313e;border-radius:10px;color:#dbe2ea;font-size:12px}.preview-cmd code{color:#66a3ff}.premium-lock{color:#ffca60}.owner-box{margin-top:18px;padding:20px;border-color:#70471a}.owner-users{display:grid;gap:9px;margin-top:12px}.owner-user{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px;background:#0d141b;border:1px solid #26323e;border-radius:10px}.owner-user small{display:block;color:#82909f}.owner-actions{display:flex;gap:7px;flex-wrap:wrap}.mini-action{border:1px solid #3b4653;background:#151d26;color:#fff;padding:8px 10px;border-radius:8px;cursor:pointer}.mini-action.prem{border-color:#86601a;color:#ffd06b}.tier-badge{display:inline-block;margin-left:8px;padding:3px 6px;border-radius:999px;font-size:9px;font-weight:900}.tier-badge.free{background:#173552;color:#70b4ff}.tier-badge.premium{background:#4b3610;color:#ffcb62}.cmd-main{min-width:0}.cmd-main small{display:inline-block}.premium-command{border-color:#4b3919}.free-command{border-color:#263d54}.auth-note{font-size:12px;color:#8995a3;padding:10px 12px;border:1px dashed #303b47;border-radius:10px;margin-top:10px;line-height:1.5}.logged-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.logged-actions button{border:1px solid #33404d;background:#161f29;color:#fff;padding:9px 12px;border-radius:9px;cursor:pointer}.danger{border-color:#6b2430!important;color:#ff7584!important}@media(max-width:980px){.dash-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.stats-grid,.tier-grid,.command-preview{grid-template-columns:1fr}.dash-head{align-items:flex-start;flex-direction:column}}
+</style>
+
+<style id="alexix-horror-upgrade">
+/* ALEXIX // NIGHTMARE VISUAL UPGRADE */
+:root{--xred:#ff1238;--xblue:#1677ff;--xglow:#ff173f;--xglass:rgba(12,14,22,.78)}
+body{background:#020205;}
+body:before{background:
+ radial-gradient(circle at 50% 12%,rgba(160,0,25,.24),transparent 27%),
+ radial-gradient(circle at 10% 80%,rgba(10,62,150,.12),transparent 24%),
+ radial-gradient(circle at 90% 60%,rgba(255,0,35,.09),transparent 25%),
+ linear-gradient(180deg,#05050a 0%,#010103 100%);}
+body:after{background:repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0,rgba(255,255,255,.018) 1px,transparent 1px,transparent 4px),linear-gradient(90deg,transparent 0%,rgba(255,10,40,.07) 48%,transparent 52%);animation:scanline 7s linear infinite;opacity:.8}
+@keyframes scanline{0%{background-position:0 0, -120% 0}100%{background-position:0 100px,120% 0}}
+header{background:rgba(4,5,9,.84);border-bottom:1px solid rgba(255,20,55,.22);box-shadow:0 0 35px rgba(255,0,35,.07)}
+.logo{position:relative;text-shadow:0 0 8px rgba(255,30,65,.5),0 0 24px rgba(255,0,35,.18);animation:logoPulse 2.8s ease-in-out infinite}
+.logo:after{content:'// NIGHTMARE MODE';position:absolute;left:0;top:25px;font-size:7px;letter-spacing:3px;color:#6d6d78;opacity:.65}
+@keyframes logoPulse{0%,100%{text-shadow:0 0 7px rgba(255,30,65,.35)}50%{text-shadow:0 0 14px rgba(255,30,65,.9),0 0 32px rgba(255,0,35,.32)}}
+.menu{filter:drop-shadow(0 0 7px rgba(255,0,40,.6));animation:menuFlicker 4s infinite}
+@keyframes menuFlicker{0%,91%,94%,100%{opacity:1}92%{opacity:.35}93%{opacity:1}}
+.hero{position:relative;overflow:hidden}
+.hero:before{content:'';position:absolute;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(255,0,45,.11),transparent 65%);filter:blur(8px);animation:orb 5s ease-in-out infinite;pointer-events:none}
+@keyframes orb{0%,100%{transform:scale(.88);opacity:.55}50%{transform:scale(1.12);opacity:1}}
+.hero h1{position:relative;color:#f6f7fb;text-shadow:0 0 8px rgba(255,255,255,.25),0 0 28px rgba(255,0,45,.35),0 0 70px rgba(255,0,45,.16);animation:titleBreath 3s ease-in-out infinite}
+.hero h1 span{animation:glitchText 5.5s infinite}
+@keyframes titleBreath{0%,100%{filter:brightness(.92)}50%{filter:brightness(1.18)}}
+@keyframes glitchText{0%,88%,100%{transform:none;clip-path:none}89%{transform:translate(-2px,1px);clip-path:inset(10% 0 70% 0)}90%{transform:translate(2px,-1px);clip-path:inset(55% 0 20% 0)}91%{transform:none}}
+.badge{box-shadow:0 0 18px rgba(255,0,45,.18),inset 0 0 12px rgba(255,0,45,.05);animation:badgePulse 2.4s infinite}
+@keyframes badgePulse{0%,100%{box-shadow:0 0 8px rgba(255,0,45,.12)}50%{box-shadow:0 0 22px rgba(255,0,45,.42),inset 0 0 15px rgba(255,0,45,.1)}}
+.card,.stat,.cmd,.console{position:relative;overflow:hidden;backdrop-filter:blur(9px);box-shadow:0 18px 55px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.025)}
+.card:before,.stat:before,.cmd:before{content:'';position:absolute;left:-120%;top:0;width:70%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,30,60,.9),transparent);animation:cardScan 5s linear infinite;pointer-events:none}
+@keyframes cardScan{0%{left:-120%}45%,100%{left:150%}}
+.card.hot{box-shadow:0 0 34px rgba(255,0,40,.09),0 18px 55px rgba(0,0,0,.5),inset 0 0 30px rgba(255,0,35,.025)}
+.btn{position:relative;overflow:hidden;box-shadow:0 0 12px rgba(255,0,35,.25),inset 0 0 12px rgba(255,255,255,.03);transition:.2s}
+.btn:after{content:'';position:absolute;top:-80%;left:-40%;width:25%;height:260%;background:rgba(255,255,255,.18);transform:rotate(20deg);animation:shine 4s ease-in-out infinite;pointer-events:none}
+@keyframes shine{0%,55%{left:-45%;opacity:0}62%{opacity:1}72%,100%{left:135%;opacity:0}}
+.status{box-shadow:0 0 14px rgba(66,232,139,.1)}
+.status i{animation:onlinePulse 1.4s infinite}
+@keyframes onlinePulse{0%,100%{box-shadow:0 0 5px var(--ok)}50%{box-shadow:0 0 18px var(--ok),0 0 30px rgba(66,232,139,.35)}}
+.drawer{background:linear-gradient(180deg,rgba(5,6,11,.98),rgba(2,2,5,.99));box-shadow:25px 0 100px rgba(0,0,0,.9),inset -1px 0 0 rgba(255,0,40,.15)}
+.drawer.open{animation:drawerGlow .7s ease}
+@keyframes drawerGlow{0%{box-shadow:25px 0 20px rgba(255,0,40,.03)}100%{box-shadow:25px 0 100px rgba(0,0,0,.9),inset -1px 0 0 rgba(255,0,40,.15)}}
+.section h2{text-shadow:0 0 20px rgba(255,0,40,.12)}
+.input:focus,.select:focus,.field input:focus,.field textarea:focus{box-shadow:0 0 0 2px rgba(255,0,40,.07),0 0 20px rgba(255,0,40,.08)}
+.cmd:hover{transform:translateY(-2px);border-color:#7e182a;box-shadow:0 8px 30px rgba(0,0,0,.5),0 0 20px rgba(255,0,40,.06)}
+.run:hover{box-shadow:0 0 16px rgba(255,0,40,.2)}
+#horrorOverlay{position:fixed;inset:0;z-index:25;pointer-events:none;opacity:.35;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.5) 100%);mix-blend-mode:multiply}
+#horrorVignette{position:fixed;inset:0;z-index:26;pointer-events:none;background:radial-gradient(ellipse at center,transparent 48%,rgba(0,0,0,.5) 100%);opacity:.7}
+#horrorCanvas{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;opacity:.5}
+.horror-mark{position:fixed;right:24px;top:90px;z-index:20;font-size:42px;color:#ff1d43;opacity:.055;text-shadow:0 0 22px #ff0038;transform:rotate(-9deg);pointer-events:none;animation:markPulse 4s infinite}
+@keyframes markPulse{0%,100%{opacity:.035;transform:rotate(-9deg) scale(.96)}50%{opacity:.11;transform:rotate(-9deg) scale(1.04)}}
+.glitch-badge{position:fixed;left:18px;bottom:18px;z-index:20;font:700 9px/1 monospace;letter-spacing:2px;color:#6b6b76;opacity:.6;pointer-events:none}
+@media(max-width:800px){.logo:after{display:none}.horror-mark{right:10px;top:82px;font-size:30px}.glitch-badge{left:10px;bottom:10px}}
+</style>
+</head>
+<body>
+<div id="horrorOverlay"></div><div id="horrorVignette"></div><canvas id="horrorCanvas"></canvas><div class="horror-mark">☠</div><div class="glitch-badge">ALEXIX // SECURE DEMO // ONLINE</div>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer">
+<div class="close" id="drawerClose">×</div>
+<h2>ALEXIX</h2>
+<p class="drawer-sub">Komutlar'a tıkla; 270 komutun tamamı açılır. İstediğin komutu seçip devam edebilirsin.</p>
+<div class="main-nav" id="mainNav">
+  <button class="nav big-nav" type="button" id="commandsMenuBtn">⌘ <span>Komutlar</span><b>›</b></button>
+  <button class="nav big-nav" type="button" id="pricesMenuBtn">₺ <span>Paketler</span><b>›</b></button>
+  <button class="nav big-nav" type="button" id="contactMenuBtn">✉ <span>İletişim</span><b>›</b></button>
+</div>
+<div class="nested-panel" id="commandCategories" hidden>
+  <button class="back-btn" type="button" id="backToMain">‹ Ana Menü</button>
+  <div class="nested-title">KOMUTLAR</div>
+  <p class="nested-help">Önce kategori seç, sonra istediğin komutu aç.</p>
+  <div class="category-list" id="drawerCategories"></div>
+</div>
+<div class="nested-panel" id="commandItems" hidden>
+  <button class="back-btn" type="button" id="backToCategories">‹ Kategoriler</button>
+  <div class="nested-title" id="commandItemsTitle">KOMUTLAR</div>
+  <div class="command-list-mini" id="drawerCommandList"></div>
+</div>
+</aside>
+<header><div class="menu" id="menuBtn">☰</div><div class="logo">ALEXIX SİSTEM</div><div class="header-right"><button type="button" class="music-toggle" id="musicBtn">♫ ŞARKILAR</button><button type="button" class="mini" id="loginBtn">GİRİŞ</button><button type="button" class="mini" id="registerBtn">KAYIT</button></div></header>
+<main id="home">
+<section id="dashboard" class="dashboard-shell">
+  <div class="dash-head"><div><div class="dash-brand">ALEXIX <span>SİSTEM</span></div><div class="role" id="dashWelcome">Henüz giriş yapılmadı</div></div><div class="user-chip"><div class="avatar" id="dashAvatar">?</div><div><strong id="dashUser">Misafir</strong><div class="role" id="dashRole">Giriş yapılmadı</div></div></div></div>
+  <div class="dash-grid">
+    <aside class="side-card"><div class="profile-big"><div class="name" id="sideUser">Misafir</div><div class="balance" id="sideRole">Kullanıcı girişi bekleniyor</div></div><button class="side-link active" type="button" data-scroll="dashboard">⌂ Ana Sayfa</button><button class="side-link" type="button" data-scroll="commands">⌕ Komutlar</button><button class="side-link" type="button" data-scroll="prices">♛ Paketler</button><button class="side-link" type="button" id="ownerMenuBtn" hidden>⚙ Kurucu Yönetimi</button><button class="side-link" type="button" data-scroll="contact">☏ Destek</button></aside>
+    <div class="dash-main">
+      <div class="stats-grid"><div class="stat-card"><small>Toplam Kullanıcı</small><strong id="statUsers">0</strong><span class="trend">↗ 0%</span><div class="role" id="statUserNote">Henüz kayıt yok</div></div><div class="stat-card"><small>Premium Kullanıcı</small><strong id="statPremium">0</strong><span class="trend">↗ 0%</span><div class="role">Premium yetkisi verilenler</div></div><div class="stat-card"><small>Aktif Kullanıcı</small><strong id="statActive">0</strong><span class="trend">↗ 0%</span><div class="role">Oturum açanlar</div></div><div class="stat-card"><small>Sorgu Sayısı</small><strong id="statQueries">0</strong><span class="trend">↗ 0%</span><div class="role">Bu cihazdaki demo çalıştırmaları</div></div></div>
+      <div class="tier-grid panel-section"><div class="free-box"><div class="box-title"><h3>FREE KOMUTLAR</h3><span class="tag free">ÜCRETSİZ</span></div><p>Standart kullanıcıların görebildiği demo komutları.</p><div class="command-preview" id="freePreview"></div></div><div class="premium-box"><div class="box-title"><h3>PREMIUM KOMUTLAR</h3><span class="tag premium">PREMIUM</span></div><p>Premium yetkisi olan hesaplarda açılan demo komutları.</p><div class="command-preview" id="premiumPreview"></div></div></div>
+      <div class="owner-box" id="ownerBox" hidden><div class="box-title"><h3>⚙ KURUCU YÖNETİMİ</h3><span class="tag premium">SADECE KURUCU</span></div><p>İstediğin yerel demo kullanıcısına Premium yetkisi açıp kapatabilirsin.</p><div class="owner-users" id="ownerUsers"></div><div class="auth-note">Not: Bu GitHub Pages sürümü statik olduğundan kullanıcılar ve Premium yetkileri tarayıcının yerel depolamasında tutulur. Gerçek, tüm ziyaretçilere ortak yönetim için güvenli bir sunucu/veritabanı gerekir.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="hero"><div><span class="badge">ALEXIX SİSTEM • PANEL SÜRÜMÜ</span><h1>ALEXIX <span>SİSTEM</span></h1><p class="sub">ALEXIX SİSTEM paneli: kullanıcı rolleri, Free/Premium komut ayrımı, kurucu yönetimi ve modern panel görünümü.</p><div class="actions"><button type="button" class="btn" id="pricesBtn">PAKETLERE BAK</button><button type="button" class="btn alt" id="commandsBtn">KOMUT MERKEZİ</button></div></div></section>
+<section id="about" class="section"><div class="section-head"><div><span class="eyebrow">ALEXIX SİSTEM</span><h2>Sistem Merkezi</h2><p>Panelin çalışan arayüz özellikleri tek merkezde.</p></div><div class="status"><i></i>SİSTEM AKTİF</div></div><div class="grid"><div class="card feature"><b>⚡ Hızlı Panel</b><span>Menü, bölümler ve butonlar mobil uyumlu şekilde çalışır.</span></div><div class="card feature"><b>⌘ Komut Merkezi</b><span>Arama, kategori filtresi ve güvenli demo çalıştırma.</span></div><div class="card feature"><b>◈ Paket Yönetimi</b><span>Paket seçimi ve bildirimleri anında gösterilir.</span></div></div></section>
+<section id="prices" class="section"><div class="section-head"><div><span class="eyebrow">PAKETLER</span><h2>Paketler</h2><p>Demo paketlerini inceleyip seçim yapabilirsin.</p></div></div><div class="grid"><div class="card"><h3>BAŞLANGIÇ</h3><div class="price">99 TL</div><ul><li>Temel panel</li><li>Komut kataloğu</li><li>Standart destek</li></ul><button class="btn" id="planStart">SEÇ</button></div><div class="card hot"><h3>VIP</h3><div class="price">249 TL</div><ul><li>Geniş katalog</li><li>Özel tema</li><li>Öncelikli destek</li></ul><button class="btn" id="planVip">SEÇ</button></div><div class="card"><h3>PREMIUM</h3><div class="price">499 TL</div><ul><li>VIP özellikleri</li><li>Özel görünüm</li><li>7/24 destek</li></ul><button class="btn" id="planPremium">SEÇ</button></div></div></section>
+<section id="commands" class="section"><div class="section-head"><div><span class="eyebrow">KOMUT MERKEZİ</span><h2>Komut Kataloğu</h2><p>Komutlar burada yalnızca güvenli arayüz simülasyonu olarak çalıştırılır.</p></div></div><div class="toolbar"><input id="search" class="input" placeholder="Komut ara..."><select id="category" class="select"><option value="all">Tümü</option></select><select id="tier" class="select"><option value="all">Tüm Paketler</option><option value="free">FREE KOMUTLAR</option><option value="premium">PREMIUM KOMUTLAR</option></select></div><div id="commandsList" class="commands"></div><div class="console"><div class="console-top">ALEXIX DEMO CONSOLE</div><div id="consoleBody" class="console-body"><span class="green">● Hazır.</span> Bir komutun yanındaki ÇALIŞTIR düğmesine bas.</div></div></section>
+<section id="contact" class="section"><div class="section-head"><div><span class="eyebrow">İLETİŞİM</span><h2>Bize Ulaş</h2><p>Form gönderimi bu sürümde yerel demo bildirimi oluşturur.</p></div></div><div class="contact"><div class="card"><label class="field">Ad<input id="name" placeholder="Adınız"></label><label class="field">E-posta<input id="email" type="email" placeholder="ornek@mail.com"></label><label class="field">Mesaj<textarea id="message" placeholder="Mesajınız..."></textarea></label><button type="button" class="btn" id="sendBtn">MESAJI GÖNDER</button></div><div class="card"><h3>ALEXIX SİSTEM</h3><p style="line-height:1.8;color:#999">Bu site; marka, paket, komut kataloğu ve panel arayüzünü tanıtmak için hazırlanmış bir demo sürümüdür.</p><button type="button" class="btn alt" id="panelLoginBtn">PANELE GİR</button></div></div></section>
+</main>
+<footer>© 2026 ALEXIX SİSTEM • Panel sürümü</footer>
+
+<div class="music-panel" id="musicPanel">
+  <div class="music-head"><strong>♫ ALEXIX ŞARKILAR</strong><span class="music-close" id="musicClose">×</span></div>
+  <div class="music-now"><small>ŞU AN ÇALIYOR</small><b id="musicNow">Bir şarkı seç</b></div>
+  <div class="music-player" id="musicPlayerWrap"><div class="player-placeholder" id="playerPlaceholder">Bir şarkıya dokun; video burada oynatılır.</div><iframe id="musicFrame" title="ALEXIX Şarkı Oynatıcı" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>
+  <div class="music-controls"><button type="button" id="musicPrev">⏮</button><button type="button" id="musicPlay">▶ OYNAT</button><button type="button" id="musicNext">⏭</button></div>
+  <div class="music-list" id="musicList"></div>
+  <div class="music-note">Şarkıya dokunduğunda YouTube sayfasına gitmeden oynatıcı bu panelin içinde açılır. Bazı videolarda içerik sahibi gömülü oynatmayı kapatmış olabilir.</div>
+</div>
+<div class="modal" id="modal"><div class="modal-box"><div class="modal-head"><h3 id="modalTitle">Giriş</h3><div class="x" id="modalClose">×</div></div><div id="modalContent"></div></div></div>
+<div class="toast" id="toast"></div>
+<script>
+(function() {
+'use strict';
+const commands = [
+    {no:1,c:'kimlik',n:'/sorgu adsoyad',d:"Ad soyad sorgula"},
+    {no:2,c:'kimlik',n:'/sorgu tc',d:"TC kimlik sorgula"},
+    {no:3,c:'kimlik',n:'/sorgu dogum',d:"Doğum tarihi"},
+    {no:4,c:'kimlik',n:'/sorgu dogumyeri',d:"Doğum yeri"},
+    {no:5,c:'kimlik',n:'/sorgu anne',d:"Anne adı"},
+    {no:6,c:'kimlik',n:'/sorgu baba',d:"Baba adı"},
+    {no:7,c:'kimlik',n:'/sorgu annekizlik',d:"Anne kızlık soyadı"},
+    {no:8,c:'kimlik',n:'/sorgu cinsiyet',d:"Cinsiyet"},
+    {no:9,c:'kimlik',n:'/sorgu medeni',d:"Medeni hal"},
+    {no:10,c:'kimlik',n:'/sorgu kan',d:"Kan grubu"},
+    {no:11,c:'kimlik',n:'/sorgu boy',d:"Boy bilgisi"},
+    {no:12,c:'kimlik',n:'/sorgu kilo',d:"Kilo bilgisi"},
+    {no:13,c:'kimlik',n:'/sorgu gozrengi',d:"Göz rengi"},
+    {no:14,c:'kimlik',n:'/sorgu sacrengi',d:"Saç rengi"},
+    {no:15,c:'kimlik',n:'/sorgu din',d:"Din bilgisi"},
+    {no:16,c:'kimlik',n:'/sorgu uyruk',d:"Uyruk"},
+    {no:17,c:'kimlik',n:'/sorgu nufus',d:"Nüfus kaydı"},
+    {no:18,c:'kimlik',n:'/sorgu nufuskayit',d:"Nüfus kayıt örneği"},
+    {no:19,c:'kimlik',n:'/sorgu vukuatli',d:"Vukuatlı nüfus"},
+    {no:20,c:'kimlik',n:'/sorgu yerlesim',d:"Yerleşim yeri"},
+    {no:21,c:'kimlik',n:'/sorgu ikamet',d:"İkamet adresi"},
+    {no:22,c:'kimlik',n:'/sorgu ikametgah',d:"İkametgah belgesi"},
+    {no:23,c:'kimlik',n:'/sorgu mernis',d:"Mernis kaydı"},
+    {no:24,c:'kimlik',n:'/sorgu soyagaci',d:"Soy ağacı"},
+    {no:25,c:'kimlik',n:'/sorgu akrabalar',d:"Akraba listesi"},
+    {no:26,c:'kimlik',n:'/sorgu es',d:"Eş bilgisi"},
+    {no:27,c:'kimlik',n:'/sorgu cocuklar',d:"Çocuk listesi"},
+    {no:28,c:'kimlik',n:'/sorgu kardesler',d:"Kardeş listesi"},
+    {no:29,c:'kimlik',n:'/sorgu veli',d:"Veli bilgisi"},
+    {no:30,c:'kimlik',n:'/sorgu vesayet',d:"Vesayet kaydı"},
+    {no:31,c:'iletisim',n:'/sorgu telefon',d:"Telefon numarası"},
+    {no:32,c:'iletisim',n:'/sorgu cep',d:"Cep telefonu"},
+    {no:33,c:'iletisim',n:'/sorgu evtel',d:"Ev telefonu"},
+    {no:34,c:'iletisim',n:'/sorgu istel',d:"İş telefonu"},
+    {no:35,c:'iletisim',n:'/sorgu fax',d:"Faks numarası"},
+    {no:36,c:'iletisim',n:'/sorgu email',d:"E-posta adresi"},
+    {no:37,c:'iletisim',n:'/sorgu email2',d:"Yedek e-posta"},
+    {no:38,c:'iletisim',n:'/sorgu adres',d:"Açık adres"},
+    {no:39,c:'iletisim',n:'/sorgu kargo',d:"Kargo adresi"},
+    {no:40,c:'iletisim',n:'/sorgu faturaadres',d:"Fatura adresi"},
+    {no:41,c:'iletisim',n:'/sorgu teslimat',d:"Teslimat adresi"},
+    {no:42,c:'iletisim',n:'/sorgu sosyal',d:"Sosyal medya"},
+    {no:43,c:'iletisim',n:'/sorgu facebook',d:"Facebook profili"},
+    {no:44,c:'iletisim',n:'/sorgu instagram',d:"Instagram profili"},
+    {no:45,c:'iletisim',n:'/sorgu tiktok',d:"TikTok profili"},
+    {no:46,c:'iletisim',n:'/sorgu twitter',d:"Twitter profili"},
+    {no:47,c:'iletisim',n:'/sorgu linkedin',d:"LinkedIn profili"},
+    {no:48,c:'iletisim',n:'/sorgu youtube',d:"YouTube kanalı"},
+    {no:49,c:'iletisim',n:'/sorgu whatsapp',d:"WhatsApp kaydı"},
+    {no:50,c:'iletisim',n:'/sorgu telegram',d:"Telegram kaydı"},
+    {no:51,c:'hukuk',n:'/sorgu sabika',d:"Sabıka kaydı"},
+    {no:52,c:'hukuk',n:'/sorgu adlikayit',d:"Adli sicil kaydı"},
+    {no:53,c:'hukuk',n:'/sorgu arsiv',d:"Arşiv kaydı"},
+    {no:54,c:'hukuk',n:'/sorgu ceza',d:"Ceza kaydı"},
+    {no:55,c:'hukuk',n:'/sorgu hapis',d:"Hapis kaydı"},
+    {no:56,c:'hukuk',n:'/sorgu tutuklama',d:"Tutuklama kaydı"},
+    {no:57,c:'hukuk',n:'/sorgu gozalti',d:"Gözaltı kaydı"},
+    {no:58,c:'hukuk',n:'/sorgu ifade',d:"İfade kaydı"},
+    {no:59,c:'hukuk',n:'/sorgu dava',d:"Dava dosyası"},
+    {no:60,c:'hukuk',n:'/sorgu mahkeme',d:"Mahkeme kaydı"},
+    {no:61,c:'hukuk',n:'/sorgu iddianame',d:"İddianame"},
+    {no:62,c:'hukuk',n:'/sorgu karar',d:"Mahkeme kararı"},
+    {no:63,c:'hukuk',n:'/sorgu temyiz',d:"Temyiz kaydı"},
+    {no:64,c:'hukuk',n:'/sorgu itiraz',d:"İtiraz kaydı"},
+    {no:65,c:'hukuk',n:'/sorgu af',d:"Af kaydı"},
+    {no:66,c:'hukuk',n:'/sorgu denetimli',d:"Denetimli serbestlik"},
+    {no:67,c:'hukuk',n:'/sorgu yasak',d:"Yasaklama kararı"},
+    {no:68,c:'hukuk',n:'/sorgu gbt',d:"GBT sorgusu"},
+    {no:69,c:'hukuk',n:'/sorgu ktb',d:"KTB sorgusu"},
+    {no:70,c:'hukuk',n:'/sorgu interpol',d:"Interpol kaydı"},
+    {no:71,c:'hukuk',n:'/sorgu europol',d:"Europol kaydı"},
+    {no:72,c:'hukuk',n:'/sorgu kirmizi',d:"Kırmızı bülten"},
+    {no:73,c:'hukuk',n:'/sorgu mavi',d:"Mavi bülten"},
+    {no:74,c:'hukuk',n:'/sorgu yesil',d:"Yeşil bülten"},
+    {no:75,c:'hukuk',n:'/sorgu sari',d:"Sarı bülten"},
+    {no:76,c:'hukuk',n:'/sorgu siyah',d:"Siyah bülten"},
+    {no:77,c:'hukuk',n:'/sorgu aranma',d:"Aranma kaydı"},
+    {no:78,c:'hukuk',n:'/sorgu yakalama',d:"Yakalama kararı"},
+    {no:79,c:'hukuk',n:'/sorgu kacak',d:"Kaçak kaydı"},
+    {no:80,c:'hukuk',n:'/sorgu firari',d:"Firari kaydı"},
+    {no:81,c:'arac',n:'/sorgu plaka',d:"Plaka sorgula"},
+    {no:82,c:'arac',n:'/sorgu arac',d:"Araç bilgisi"},
+    {no:83,c:'arac',n:'/sorgu marka',d:"Marka"},
+    {no:84,c:'arac',n:'/sorgu model',d:"Model"},
+    {no:85,c:'arac',n:'/sorgu yil',d:"Model yılı"},
+    {no:86,c:'arac',n:'/sorgu sasi',d:"Şasi numarası"},
+    {no:87,c:'arac',n:'/sorgu motor',d:"Motor numarası"},
+    {no:88,c:'arac',n:'/sorgu renk',d:"Araç rengi"},
+    {no:89,c:'arac',n:'/sorgu yakittipi',d:"Yakıt tipi"},
+    {no:90,c:'arac',n:'/sorgu vitestipi',d:"Vites tipi"},
+    {no:91,c:'arac',n:'/sorgu km',d:"Kilometre"},
+    {no:92,c:'arac',n:'/sorgu muayene',d:"Muayene tarihi"},
+    {no:93,c:'arac',n:'/sorgu sigorta',d:"Sigorta bilgisi"},
+    {no:94,c:'arac',n:'/sorgu kasko',d:"Kasko bilgisi"},
+    {no:95,c:'arac',n:'/sorgu sahip',d:"Araç sahibi"},
+    {no:96,c:'arac',n:'/sorgu devir',d:"Devir kaydı"},
+    {no:97,c:'arac',n:'/sorgu noter',d:"Noter satış"},
+    {no:98,c:'arac',n:'/sorgu haciz',d:"Haciz kaydı"},
+    {no:99,c:'arac',n:'/sorgu rehin',d:"Rehin kaydı"},
+    {no:100,c:'arac',n:'/sorgu calinti',d:"Çalıntı kontrol"},
+    {no:101,c:'arac',n:'/sorgu kaza',d:"Kaza kaydı"},
+    {no:102,c:'arac',n:'/sorgu hasar',d:"Hasar kaydı"},
+    {no:103,c:'arac',n:'/sorgu tramer',d:"Tramer kaydı"},
+    {no:104,c:'arac',n:'/sorgu ekspertiz',d:"Ekspertiz raporu"},
+    {no:105,c:'arac',n:'/sorgu ceza',d:"Trafik cezası"},
+    {no:106,c:'arac',n:'/sorgu puan',d:"Ehliyet puanı"},
+    {no:107,c:'arac',n:'/sorgu alkol',d:"Alkol kaydı"},
+    {no:108,c:'arac',n:'/sorgu radar',d:"Radar cezası"},
+    {no:109,c:'arac',n:'/sorgu otopark',d:"Otopark kaydı"},
+    {no:110,c:'arac',n:'/sorgu gecis',d:"HGS/OGS geçiş"},
+    {no:111,c:'tapu',n:'/sorgu tapu',d:"Tapu kaydı"},
+    {no:112,c:'tapu',n:'/sorgu kadastro',d:"Kadastro bilgisi"},
+    {no:113,c:'tapu',n:'/sorgu parsel',d:"Parsel sorgula"},
+    {no:114,c:'tapu',n:'/sorgu ada',d:"Ada bilgisi"},
+    {no:115,c:'tapu',n:'/sorgu ev',d:"Ev bilgisi"},
+    {no:116,c:'tapu',n:'/sorgu daire',d:"Daire bilgisi"},
+    {no:117,c:'tapu',n:'/sorgu kat',d:"Kat bilgisi"},
+    {no:118,c:'tapu',n:'/sorgu m2',d:"Metrekare"},
+    {no:119,c:'tapu',n:'/sorgu odasayisi',d:"Oda sayısı"},
+    {no:120,c:'tapu',n:'/sorgu binayasi',d:"Bina yaşı"},
+    {no:121,c:'tapu',n:'/sorgu kira',d:"Kira kaydı"},
+    {no:122,c:'tapu',n:'/sorgu kiraci',d:"Kiracı bilgisi"},
+    {no:123,c:'tapu',n:'/sorgu mulksahip',d:"Mülk sahibi"},
+    {no:124,c:'tapu',n:'/sorgu ipotek',d:"İpotek kaydı"},
+    {no:125,c:'tapu',n:'/sorgu emlak',d:"Emlak kaydı"},
+    {no:126,c:'tapu',n:'/sorgu imar',d:"İmar durumu"},
+    {no:127,c:'tapu',n:'/sorgu isyeri',d:"İş yeri kaydı"},
+    {no:128,c:'tapu',n:'/sorgu dukkan',d:"Dükkan kaydı"},
+    {no:129,c:'tapu',n:'/sorgu depo',d:"Depo kaydı"},
+    {no:130,c:'tapu',n:'/sorgu arsa',d:"Arsa bilgisi"},
+    {no:131,c:'tapu',n:'/sorgu tarla',d:"Tarla bilgisi"},
+    {no:132,c:'tapu',n:'/sorgu bahce',d:"Bahçe bilgisi"},
+    {no:133,c:'tapu',n:'/sorgu apartman',d:"Apartman kaydı"},
+    {no:134,c:'tapu',n:'/sorgu site',d:"Site kaydı"},
+    {no:135,c:'tapu',n:'/sorgu rezidans',d:"Rezidans kaydı"},
+    {no:136,c:'finans',n:'/sorgu banka',d:"Banka hesabı"},
+    {no:137,c:'finans',n:'/sorgu iban',d:"IBAN sorgula"},
+    {no:138,c:'finans',n:'/sorgu bakiye',d:"Bakiye sorgula"},
+    {no:139,c:'finans',n:'/sorgu hesaphareket',d:"Hesap hareketi"},
+    {no:140,c:'finans',n:'/sorgu kredi',d:"Kredi kaydı"},
+    {no:141,c:'finans',n:'/sorgu kredikarti',d:"Kredi kartı"},
+    {no:142,c:'finans',n:'/sorgu borc',d:"Borç sorgula"},
+    {no:143,c:'finans',n:'/sorgu fatura',d:"Fatura sorgula"},
+    {no:144,c:'finans',n:'/sorgu maas',d:"Maaş bilgisi"},
+    {no:145,c:'finans',n:'/sorgu transfer',d:"Transfer geçmişi"},
+    {no:146,c:'finans',n:'/sorgu havale',d:"Havale kaydı"},
+    {no:147,c:'finans',n:'/sorgu eft',d:"EFT kaydı"},
+    {no:148,c:'finans',n:'/sorgu altin',d:"Altın hesabı"},
+    {no:149,c:'finans',n:'/sorgu doviz',d:"Döviz hesabı"},
+    {no:150,c:'finans',n:'/sorgu borsa',d:"Borsa kaydı"},
+    {no:151,c:'finans',n:'/sorgu kripto',d:"Kripto cüzdan"},
+    {no:152,c:'finans',n:'/sorgu sgk',d:"SGK kaydı"},
+    {no:153,c:'finans',n:'/sorgu bagkur',d:"Bağkur kaydı"},
+    {no:154,c:'finans',n:'/sorgu emekli',d:"Emeklilik durumu"},
+    {no:155,c:'finans',n:'/sorgu vergi',d:"Vergi kaydı"},
+    {no:156,c:'finans',n:'/sorgu gelirvergisi',d:"Gelir vergisi"},
+    {no:157,c:'finans',n:'/sorgu kdv',d:"KDV kaydı"},
+    {no:158,c:'finans',n:'/sorgu harç',d:"Harç kaydı"},
+    {no:159,c:'finans',n:'/sorgu makbuz',d:"Makbuz sorgula"},
+    {no:160,c:'finans',n:'/sorgu dekont',d:"Dekont sorgula"},
+    {no:161,c:'finans',n:'/sorgu haciz',d:"Haciz kaydı"},
+    {no:162,c:'finans',n:'/sorgu icra',d:"İcra dosyası"},
+    {no:163,c:'finans',n:'/sorgu iflas',d:"İflas kaydı"},
+    {no:164,c:'finans',n:'/sorgu konkordato',d:"Konkordato"},
+    {no:165,c:'finans',n:'/sorgu teminat',d:"Teminat kaydı"},
+    {no:166,c:'egitim',n:'/sorgu ogrenim',d:"Öğrenim durumu"},
+    {no:167,c:'egitim',n:'/sorgu okul',d:"Okul bilgisi"},
+    {no:168,c:'egitim',n:'/sorgu diploma',d:"Diploma sorgula"},
+    {no:169,c:'egitim',n:'/sorgu transkript',d:"Transkript"},
+    {no:170,c:'egitim',n:'/sorgu oss',d:"ÖSS/YKS kaydı"},
+    {no:171,c:'egitim',n:'/sorgu lgs',d:"LGS kaydı"},
+    {no:172,c:'egitim',n:'/sorgu universite',d:"Üniversite kaydı"},
+    {no:173,c:'egitim',n:'/sorgu lisans',d:"Lisans bilgisi"},
+    {no:174,c:'egitim',n:'/sorgu yukseklisans',d:"Yüksek lisans"},
+    {no:175,c:'egitim',n:'/sorgu doktora',d:"Doktora kaydı"},
+    {no:176,c:'egitim',n:'/sorgu sertifika',d:"Sertifika sorgula"},
+    {no:177,c:'egitim',n:'/sorgu kurs',d:"Kurs kaydı"},
+    {no:178,c:'egitim',n:'/sorgu yabanci',d:"Yabancı dil"},
+    {no:179,c:'egitim',n:'/sorgu ehliyet',d:"Ehliyet bilgisi"},
+    {no:180,c:'egitim',n:'/sorgu src',d:"SRC belgesi"},
+    {no:181,c:'egitim',n:'/sorgu psikoteknik',d:"Psikoteknik"},
+    {no:182,c:'egitim',n:'/sorgu adr',d:"ADR belgesi"},
+    {no:183,c:'egitim',n:'/sorgu kaptanlik',d:"Kaptanlık"},
+    {no:184,c:'egitim',n:'/sorgu pilotluk',d:"Pilotluk"},
+    {no:185,c:'egitim',n:'/sorgu dalgic',d:"Dalgıç belgesi"},
+    {no:186,c:'saglik',n:'/sorgu saglik',d:"Sağlık kaydı"},
+    {no:187,c:'saglik',n:'/sorgu hastane',d:"Hastane kaydı"},
+    {no:188,c:'saglik',n:'/sorgu recete',d:"Reçete sorgula"},
+    {no:189,c:'saglik',n:'/sorgu tahlil',d:"Tahlil sonucu"},
+    {no:190,c:'saglik',n:'/sorgu rontgen',d:"Röntgen kaydı"},
+    {no:191,c:'saglik',n:'/sorgu mr',d:"MR kaydı"},
+    {no:192,c:'saglik',n:'/sorgu tomografi',d:"Tomografi"},
+    {no:193,c:'saglik',n:'/sorgu ameliyat',d:"Ameliyat kaydı"},
+    {no:194,c:'saglik',n:'/sorgu asi',d:"Aşı kaydı"},
+    {no:195,c:'saglik',n:'/sorgu pandemi',d:"Pandemi kaydı"},
+    {no:196,c:'saglik',n:'/sorgu engelli',d:"Engelli kaydı"},
+    {no:197,c:'saglik',n:'/sorgu malul',d:"Malullük"},
+    {no:198,c:'saglik',n:'/sorgu psikiyatri',d:"Psikiyatri kaydı"},
+    {no:199,c:'saglik',n:'/sorgu ilac',d:"İlaç kaydı"},
+    {no:200,c:'saglik',n:'/sorgu alerji',d:"Alerji kaydı"},
+    {no:201,c:'saglik',n:'/sorgu kan',d:"Kan kaydı"},
+    {no:202,c:'saglik',n:'/sorgu nakil',d:"Organ nakli"},
+    {no:203,c:'saglik',n:'/sorgu dializ',d:"Diyaliz kaydı"},
+    {no:204,c:'saglik',n:'/sorgu kanser',d:"Kanser kaydı"},
+    {no:205,c:'saglik',n:'/sorgu sigortasaglik',d:"Sağlık sigortası"},
+    {no:206,c:'is',n:'/sorgu meslek',d:"Meslek bilgisi"},
+    {no:207,c:'is',n:'/sorgu isyeri',d:"İş yeri kaydı"},
+    {no:208,c:'is',n:'/sorgu sgkis',d:"SGK iş kaydı"},
+    {no:209,c:'is',n:'/sorgu istencikis',d:"İşten çıkış"},
+    {no:210,c:'is',n:'/sorgu kidem',d:"Kıdem tazminatı"},
+    {no:211,c:'is',n:'/sorgu ihbar',d:"İhbar tazminatı"},
+    {no:212,c:'is',n:'/sorgu maas',d:"Maaş kaydı"},
+    {no:213,c:'is',n:'/sorgu bordro',d:"Bordro sorgula"},
+    {no:214,c:'is',n:'/sorgu vergilevha',d:"Vergi levhası"},
+    {no:215,c:'is',n:'/sorgu ticaret',d:"Ticaret sicil"},
+    {no:216,c:'is',n:'/sorgu oda',d:"Oda kaydı"},
+    {no:217,c:'is',n:'/sorgu esnaf',d:"Esnaf kaydı"},
+    {no:218,c:'is',n:'/sorgu sirket',d:"Şirket kaydı"},
+    {no:219,c:'is',n:'/sorgu ortak',d:"Ortaklık kaydı"},
+    {no:220,c:'is',n:'/sorgu mersis',d:"MERSİS kaydı"},
+    {no:221,c:'is',n:'/sorgu marka',d:"Marka tescili"},
+    {no:222,c:'is',n:'/sorgu patent',d:"Patent kaydı"},
+    {no:223,c:'is',n:'/sorgu lisans',d:"Lisans kaydı"},
+    {no:224,c:'is',n:'/sorgu ihracat',d:"İhracat kaydı"},
+    {no:225,c:'is',n:'/sorgu ithalat',d:"İthalat kaydı"},
+    {no:226,c:'goc',n:'/sorgu pasaport',d:"Pasaport kaydı"},
+    {no:227,c:'goc',n:'/sorgu vize',d:"Vize kaydı"},
+    {no:228,c:'goc',n:'/sorgu giris',d:"Giriş kaydı"},
+    {no:229,c:'goc',n:'/sorgu cikis',d:"Çıkış kaydı"},
+    {no:230,c:'goc',n:'/sorgu yurtdisi',d:"Yurt dışı kaydı"},
+    {no:231,c:'goc',n:'/sorgu oturma',d:"Oturma izni"},
+    {no:232,c:'goc',n:'/sorgu calismaizin',d:"Çalışma izni"},
+    {no:233,c:'goc',n:'/sorgu vatandaslik',d:"Vatandaşlık"},
+    {no:234,c:'goc',n:'/sorgu mavi_kart',d:"Mavi Kart"},
+    {no:235,c:'goc',n:'/sorgu yesil_kart',d:"Yeşil Kart"},
+    {no:236,c:'goc',n:'/sorgu sinirdisi',d:"Sınır dışı kaydı"},
+    {no:237,c:'goc',n:'/sorgu goc',d:"Göç kaydı"},
+    {no:238,c:'goc',n:'/sorgu iltica',d:"İltica kaydı"},
+    {no:239,c:'goc',n:'/sorgu multeci',d:"Mülteci kaydı"},
+    {no:240,c:'goc',n:'/sorgu kimlik',d:"Kimlik kaydı"},
+    {no:241,c:'goc',n:'/sorgu gecici',d:"Geçici kimlik"},
+    {no:242,c:'goc',n:'/sorgu ikametizin',d:"İkamet izni"},
+    {no:243,c:'goc',n:'/sorgu seyahat',d:"Seyahat kaydı"},
+    {no:244,c:'goc',n:'/sorgu bilet',d:"Bilet kaydı"},
+    {no:245,c:'goc',n:'/sorgu ucus',d:"Uçuş kaydı"},
+    {no:246,c:'sistem',n:'/sorgu log',d:"Sistem logu"},
+    {no:247,c:'sistem',n:'/sorgu kayit',d:"Kayıt geçmişi"},
+    {no:248,c:'sistem',n:'/sorgu islem',d:"İşlem geçmişi"},
+    {no:249,c:'sistem',n:'/sorgu randevu',d:"Randevu kaydı"},
+    {no:250,c:'sistem',n:'/sorgu basvuru',d:"Başvuru kaydı"},
+    {no:251,c:'sistem',n:'/sorgu talep',d:"Talep kaydı"},
+    {no:252,c:'sistem',n:'/sorgu sikayet',d:"Şikayet kaydı"},
+    {no:253,c:'sistem',n:'/sorgu belge',d:"Belge sorgula"},
+    {no:254,c:'sistem',n:'/sorgu dijital',d:"Dijital kayıt"},
+    {no:255,c:'sistem',n:'/sorgu eposta',d:"E-posta kaydı"},
+    {no:256,c:'sistem',n:'/sorgu ip',d:"IP sorgula"},
+    {no:257,c:'sistem',n:'/sorgu cihaz',d:"Cihaz kaydı"},
+    {no:258,c:'sistem',n:'/sorgu konum',d:"Konum kaydı"},
+    {no:259,c:'sistem',n:'/sorgu gps',d:"GPS kaydı"},
+    {no:260,c:'sistem',n:'/sorgu kamera',d:"Kamera kaydı"},
+    {no:261,c:'sistem',n:'/sorgu plaka_tanima',d:"Plaka tanıma"},
+    {no:262,c:'sistem',n:'/sorgu yuz',d:"Yüz tanıma"},
+    {no:263,c:'sistem',n:'/sorgu parmak',d:"Parmak izi"},
+    {no:264,c:'sistem',n:'/sorgu dna',d:"DNA kaydı"},
+    {no:265,c:'sistem',n:'/sorgu ses',d:"Ses kaydı"},
+    {no:266,c:'sistem',n:'/sorgu cagri',d:"Çağrı kaydı"},
+    {no:267,c:'sistem',n:'/sorgu sms',d:"SMS kaydı"},
+    {no:268,c:'sistem',n:'/sorgu whatsapp',d:"WhatsApp kaydı"},
+    {no:269,c:'sistem',n:'/sorgu sosyalmedya',d:"Sosyal medya"},
+    {no:270,c:'sistem',n:'/sorgu yardim',d:"Yardım menüsü"}
+  ];
+const $=id=>document.getElementById(id);
+const ready=(fn)=>document.readyState==='loading'?document.addEventListener('DOMContentLoaded',fn,{once:true}):fn();
+function toggleMenu(open) {
+ const d=$('drawer'),o=$('overlay'); if(!d||!o)return;
+ d.classList.toggle('open',open); o.classList.toggle('show',open); document.body.style.overflow=open?'hidden':'';
+}
+function go(id) { const el=$(id); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); toggleMenu(false); }
+function toast(msg) { const t=$('toast'); if(!t)return; t.textContent=msg; t.classList.add('show'); clearTimeout(window._alexToast); window._alexToast=setTimeout(()=>t.classList.remove('show'),2200); }
+function renderCategoryOptions() {
+ const cats=[['all','Tümü'],['kimlik','Kimlik & Nüfus'],['iletisim','İletişim & Sosyal'],['hukuk','Adli & Güvenlik'],['arac','Araç & Trafik'],['tapu','Tapu & Gayrimenkul'],['finans','Finans & Vergi'],['egitim','Eğitim & Belgeler'],['saglik','Sağlık'],['is','İş & Ticaret'],['goc','Pasaport & Göç'],['sistem','Sistem & Dijital']];
+ $('category').innerHTML=cats.map(([v,n])=>`<option value="${v}">${n}</option>`).join('');
+}
+function runCommand(cmd) {
+ $('consoleBody').textContent='[ALEXIX DEMO] '+cmd+'\n\nKomut arayüzü başarıyla yanıt verdi.\nGerçek kişi verisi veya yetkisiz erişim gerçekleştirilmedi.';
+ toast('Komut çalıştırıldı: '+cmd);
+}
+function renderCommands(cat) {
+ const q=($('search').value||'').toLocaleLowerCase('tr-TR').trim();
+ const category=cat || $('category').value || 'all'; $('category').value=category;
+ const tier=($('tier')?.value||'all');
+ const list=commands.filter(x=>(category==='all'||x.c===category)&&((tier==='all')||(tier==='free'&&x.no<=30)||(tier==='premium'&&x.no>30))&&((x.n+' '+x.d).toLocaleLowerCase('tr-TR').includes(q)));
+ $('commandsList').innerHTML=list.length?list.map((x,i)=>{const isFree=x.no<=30;return `<div class="cmd ${isFree?'free-command':'premium-command'}"><div class="cmd-no">#${x.no}</div><div class="cmd-main"><code>${x.n}</code><small>${x.d}</small><span class="tier-badge ${isFree?'free':'premium'}">${isFree?'FREE':'PREMIUM'}</span></div><button type="button" class="run" data-index="${i}">ÇALIŞTIR</button></div>`}).join(''):'<div class="empty">Sonuç bulunamadı.</div>';
+ $('commandsList').querySelectorAll('.run').forEach(b=>b.addEventListener('click',()=>runCommand(list[+b.dataset.index].n)));
+ document.querySelectorAll('.catnav').forEach(b=>b.classList.toggle('active',b.dataset.cat===category));
+}
+function openModal(type) {
+ $('modal').classList.add('show'); $('modalTitle').textContent=type==='register'?'Kayıt':'Giriş';
+ $('modalContent').innerHTML=type==='register'?'<label class="field">Kullanıcı adı<input id="authUser"></label><label class="field">E-posta<input id="authEmail" type="email"></label><label class="field">Şifre<input id="authPass" type="password"></label><button type="button" class="btn" id="authSubmit">KAYIT OL</button>':'<label class="field">Kullanıcı adı<input id="authUser"></label><label class="field">Şifre<input id="authPass" type="password"></label><button type="button" class="btn" id="authSubmit">GİRİŞ YAP</button>';
+ $('authSubmit').onclick=()=>{closeModal();toast((type==='register'?'Kayıt':'Giriş')+' demo olarak tamamlandı.')};
+}
+function closeModal(){ $('modal').classList.remove('show'); }
+ready(()=>{
+ renderCategoryOptions(); renderCommands();
+ $('menuBtn')?.addEventListener('click',()=>toggleMenu(true));
+ $('drawerClose')?.addEventListener('click',()=>toggleMenu(false));
+ $('overlay').addEventListener('click',()=>toggleMenu(false));
+ $('loginBtn').onclick=()=>openModal('login'); $('registerBtn').onclick=()=>openModal('register');
+ $('pricesBtn').onclick=()=>go('prices'); $('commandsBtn').onclick=()=>go('commands'); $('panelLoginBtn').onclick=()=>openModal('login');
+ function purchasePlan(name,price){ $('modalTitle').textContent='PAKET SATIN AL'; $('modalContent').innerHTML='<div class="purchase-box"><h3>'+name+' — '+price+'</h3><p>Paket satın alma ve Alexix ulaşım için:</p><a class="contact-phone" href="tel:+573247755324">+57 324 7755324</a><p class="muted">Bu demo sitede ödeme alınmaz. Satın alma için yukarıdaki numaradan Alexix’e ulaşabilirsin.</p></div><button type="button" class="btn" id="purchaseClose">KAPAT</button>'; $('modal').classList.add('show'); $('purchaseClose').onclick=closeModal; } $('planStart').onclick=()=>purchasePlan('BAŞLANGIÇ','99 TL'); $('planVip').onclick=()=>purchasePlan('VIP','249 TL'); $('planPremium').onclick=()=>purchasePlan('PREMIUM','499 TL');
+ $('sendBtn').onclick=()=>{const n=$('name').value.trim(),e=$('email').value.trim(),m=$('message').value.trim();if(!n||!e||!m)return toast('Lütfen tüm alanları doldur.');toast('Mesaj demo olarak gönderildi.');$('name').value='';$('email').value='';$('message').value='';};
+ $('search').oninput=()=>renderCommands(); $('category').onchange=()=>renderCommands();
+
+ // Hiyerarşik Komut menüsü: Komutlar -> Kategori -> Komut -> Giriş/Çalıştır
+ const catNames={all:'Tüm Komutlar',kimlik:'Kimlik & Nüfus',iletisim:'İletişim & Sosyal',hukuk:'Adli & Güvenlik',arac:'Araç & Trafik',tapu:'Tapu & Gayrimenkul',finans:'Finans & Vergi',egitim:'Eğitim & Belgeler',saglik:'Sağlık',is:'İş & Ticaret',goc:'Pasaport & Göç',sistem:'Sistem & Dijital'};
+ const catIcons={all:'☷',kimlik:'👤',iletisim:'☎',hukuk:'⚖',arac:'🚗',tapu:'⌂',finans:'₺',egitim:'🎓',saglik:'✚',is:'▣',goc:'✈',sistem:'⌘'};
+ function drawerCategoryList(){
+   const box=$('drawerCategories'); if(!box)return;
+   const counts={}; commands.forEach(x=>counts[x.c]=(counts[x.c]||0)+1);
+   box.innerHTML=Object.keys(catNames).map(k=>`<button type="button" data-drawer-cat="${k}"><span>${catIcons[k]} ${catNames[k]}</span><span>${k==='all'?commands.length:(counts[k]||0)}</span></button>`).join('');
+   box.querySelectorAll('[data-drawer-cat]').forEach(b=>b.onclick=()=>openDrawerCommands(b.dataset.drawerCat));
+ }
+ function openDrawerCommands(cat){
+   $('commandCategories').hidden=true; $('commandItems').hidden=false;
+   $('commandItemsTitle').textContent=catNames[cat]||'KOMUTLAR';
+   const list=cat==='all'?commands:commands.filter(x=>x.c===cat);
+   $('drawerCommandList').innerHTML=list.map(x=>`<button type="button" class="mini-command" data-command-no="${x.no}"><span><code>${x.n}</code><small>${x.d}</small></span><span class="mini-arrow">›</span></button>`).join('');
+   $('drawerCommandList').querySelectorAll('[data-command-no]').forEach(b=>b.onclick=()=>openCommandEntry(list.find(x=>x.no==b.dataset.commandNo)));
+ }
+ function openCommandEntry(cmd){
+   if(!cmd)return;
+   $('modalTitle').textContent=cmd.n;
+   $('modalContent').innerHTML=`<div class="command-entry"><p>${cmd.d}</p><input class="command-input" id="commandValue" placeholder="Giriş değeri (demo)"><button type="button" class="btn command-run" id="commandSubmit">ÇALIŞTIR</button><div class="demo-safe">Bu alan yalnızca güvenli arayüz demosudur. Gerçek kişi verilerine erişim veya yetkisiz sorgu yapılmaz.</div></div>`;
+   $('modal').classList.add('show');
+   $('commandSubmit').onclick=()=>{const v=$('commandValue').value.trim(); closeModal(); toggleMenu(false); runCommand(cmd.n+(v?' '+v:''));};
+ }
+ drawerCategoryList();
+ $('commandsMenuBtn').onclick=()=>{
+   // Komutlar'a basınca menünün içinde doğrudan 270 komutun tamamını göster.
+   $('mainNav').hidden=true;
+   $('commandCategories').hidden=true;
+   $('commandItems').hidden=false;
+   $('commandItemsTitle').textContent='270 KOMUT';
+   $('drawerCommandList').innerHTML=commands.map(x=>`<button type="button" class="mini-command" data-command-no="${x.no}"><span><code>${x.n}</code><small>${x.d}</small></span><span class="mini-arrow">›</span></button>`).join('');
+   $('drawerCommandList').querySelectorAll('[data-command-no]').forEach(b=>b.onclick=()=>openCommandEntry(commands.find(x=>x.no==b.dataset.commandNo)));
+ };
+ $('backToMain').onclick=()=>{$('commandCategories').hidden=true;$('commandItems').hidden=true;$('mainNav').hidden=false;};
+ $('backToCategories').onclick=()=>{$('commandItems').hidden=true;$('commandCategories').hidden=false;};
+ $('pricesMenuBtn').onclick=()=>go('prices');
+ $('contactMenuBtn').onclick=()=>go('contact');
+
+ document.querySelectorAll('.nav').forEach(a=>a.onclick=e=>{e.preventDefault();go(a.getAttribute('href').slice(1));});
+ $('modal').onclick=e=>{if(e.target===$('modal'))closeModal();}; $('modalClose').onclick=closeModal;
+ window.toggleMenu=toggleMenu; window.closeModal=closeModal; window.openModal=openModal;
+});
+})();
+</script>
+
+
+<script id="alexix-music-js">
+(function(){
+'use strict';
+// Seçilen şarkı, panel içindeki YouTube oynatıcısında açılır; sayfadan çıkılmaz.
+const tracks=[
+ ['Bir Derdim Var','Mor ve Ötesi'],['Aşkın Mapushane','Haluk Levent'],['Gidiyorum','Mor ve Ötesi'],['Yalnızlık Senfonisi','Pinhani'],['Unut Beni','Model'],
+ ['APT.','ROSÉ Bruno Mars'],['Espresso','Sabrina Carpenter'],['Beautiful Things','Benson Boone'],['Die With A Smile','Lady Gaga Bruno Mars'],['Stumblin’ In','CYRIL'],
+ ['lovely','Billie Eilish Khalid'],['Another Love','Tom Odell'],['Let Her Go','Passenger'],['Arcade','Duncan Laurence'],['Someone You Loved','Lewis Capaldi'],
+ ['Комета','JONY'],['Плакала','KAZKA'],['Розовое вино','Элджей Feduk'],
+ ['Yananı Görür Allah','Yananı Görür Allah'],['Yakında Yakında Gelecek Yakında','Yakında Yakında Gelecek Yakında']
+];
+let current=0;
+function ytEmbedUrl(i){const [name,artist]=tracks[i];const q=encodeURIComponent(name+' '+artist);return 'https://www.youtube.com/embed?listType=search&list='+q+'&autoplay=1';}
+function openTrack(i){current=(i+tracks.length)%tracks.length;const [name,artist]=tracks[current];$('musicNow').textContent=name+' — '+artist;const frame=$('musicFrame'),wrap=$('musicPlayerWrap');if(frame&&wrap){frame.src=ytEmbedUrl(current);wrap.classList.add('ready');}renderList();}
+function renderList(){const box=$('musicList');if(!box)return;box.innerHTML=tracks.map((t,i)=>`<div class="track ${i===current?'active':''}" data-track="${i}"><span class="track-num">${String(i+1).padStart(2,'0')}</span><span class="track-name"><b>${t[0]}</b><small style="display:block;color:#777;margin-top:2px">${t[1]}</small></span><span class="track-play">▶</span></div>`).join('');box.querySelectorAll('[data-track]').forEach(x=>x.onclick=()=>openTrack(Number(x.dataset.track)));}
+function togglePanel(){const p=$('musicPanel');p.classList.toggle('show');if(p.classList.contains('show'))renderList();}
+document.addEventListener('DOMContentLoaded',()=>{
+ renderList();
+ $('musicBtn')?.addEventListener('click',togglePanel);
+ $('musicClose')?.addEventListener('click',()=>$('musicPanel').classList.remove('show'));
+ $('musicPlay')?.addEventListener('click',()=>openTrack(current));
+ $('musicPrev')?.addEventListener('click',()=>openTrack(current-1));
+ $('musicNext')?.addEventListener('click',()=>openTrack(current+1));
+ document.addEventListener('click',e=>{const p=$('musicPanel');if(p&&p.classList.contains('show')&&!p.contains(e.target)&&e.target!==$('musicBtn'))p.classList.remove('show');});
+});
+})();
+</script>
+<script id="alexix-enhancements-js">
+(function(){
+  function initEnhancements(){
+    const about=document.getElementById('about');
+    if(about && !document.getElementById('alexixStats')){
+      const bar=document.createElement('div'); bar.id='alexixStats'; bar.className='enhance-bar';
+      bar.innerHTML='<div class="stat"><b>270</b><span>Katalog komutu</span></div><div class="stat"><b>11</b><span>Kategori</span></div><div class="stat"><b id="onlineCount">24</b><span>Demo kullanıcı</span></div><div class="stat"><b>7/24</b><span>Panel erişimi</span></div>';
+      about.appendChild(bar);
+      const qa=document.createElement('div'); qa.className='quick-actions';
+      qa.innerHTML='<button type="button" id="quickSupport">🎫 Destek</button><button type="button" id="quickPurchase">💳 Paketler</button><button type="button" id="quickCommands">⌘ Komut Merkezi</button>';
+      about.appendChild(qa);
+      document.getElementById('quickSupport').onclick=()=>document.getElementById('contact')?.scrollIntoView({behavior:'smooth'});
+      document.getElementById('quickPurchase').onclick=()=>document.getElementById('prices')?.scrollIntoView({behavior:'smooth'});
+      document.getElementById('quickCommands').onclick=()=>document.getElementById('commands')?.scrollIntoView({behavior:'smooth'});
+    }
+    if(!document.getElementById('alexixFloating')){
+      const f=document.createElement('div');f.id='alexixFloating';f.className='floating';
+      f.innerHTML='<button class="float-btn" id="themeBtn" title="Tema">◐</button><button class="float-btn" id="topBtn" title="Yukarı">↑</button>';
+      document.body.appendChild(f);
+      document.getElementById('topBtn').onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
+      document.getElementById('themeBtn').onclick=()=>{
+        document.body.classList.toggle('light-demo');
+        document.documentElement.style.setProperty('--bg',document.body.classList.contains('light-demo')?'#f4f4f7':'#050507');
+        document.documentElement.style.setProperty('--panel',document.body.classList.contains('light-demo')?'#ffffff':'#0c0c12');
+        document.documentElement.style.setProperty('--panel2',document.body.classList.contains('light-demo')?'#f0f0f3':'#111119');
+        document.documentElement.style.setProperty('--text',document.body.classList.contains('light-demo')?'#15151b':'#f5f5f7');
+        document.documentElement.style.setProperty('--muted',document.body.classList.contains('light-demo')?'#555560':'#92929d');
+        localStorage.setItem('alexixTheme',document.body.classList.contains('light-demo')?'light':'dark');
+      };
+      if(localStorage.getItem('alexixTheme')==='light') document.getElementById('themeBtn').click();
+    }
+    // Upgrade package purchase dialogs with copy + call/WhatsApp actions.
+    ['planStart','planVip','planPremium'].forEach(id=>{
+      const old=document.getElementById(id); if(!old || old.dataset.upgraded)return;
+      old.dataset.upgraded='1'; old.onclick=function(){
+        const names={planStart:['BAŞLANGIÇ','99 TL'],planVip:['VIP','249 TL'],planPremium:['PREMIUM','499 TL']}[id];
+        const modal=document.getElementById('modal'), title=document.getElementById('modalTitle'), content=document.getElementById('modalContent');
+        title.textContent='PAKET SATIN AL';
+        content.innerHTML='<div class="purchase-box"><h3>'+names[0]+' — '+names[1]+'</h3><p>Paket hakkında bilgi ve satın alma için Alexix ulaşım:</p><a class="contact-phone" href="tel:+573247755324">📞 +57 324 7755324</a><div class="purchase-actions"><a class="btn" href="tel:+573247755324">ARA</a><a class="btn alt" target="_blank" rel="noopener" href="https://wa.me/573247755324">WHATSAPP</a></div><button type="button" class="copy-btn" id="copyPhone" style="width:100%;margin-top:10px">NUMARAYI KOPYALA</button><div class="demo-note">Bu sitede ödeme alınmaz. Paket işlemi için iletişim numarasından Alexix\'e ulaşılır.</div></div><button type="button" class="btn" id="purchaseClose" style="margin-top:12px">KAPAT</button>';
+        modal.classList.add('show');
+        document.getElementById('purchaseClose').onclick=()=>modal.classList.remove('show');
+        document.getElementById('copyPhone').onclick=async()=>{try{await navigator.clipboard.writeText('+57 324 7755324'); if(typeof toast==='function')toast('Numara kopyalandı.');}catch(e){if(typeof toast==='function')toast('+57 324 7755324');}};
+      };
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initEnhancements,{once:true});else initEnhancements();
+})();
+</script>
+
+<script id="alexix-account-v2">
+(function(){
+'use strict';
+const OWNER='alexixbaba';
+const UKEY='alexixUsersV2', CKEY='alexixCurrentV2', QKEY='alexixQueriesV2';
+function users(){try{return JSON.parse(localStorage.getItem(UKEY)||'[]')}catch(e){return[]}}
+function saveUsers(v){localStorage.setItem(UKEY,JSON.stringify(v))}
+function current(){try{return JSON.parse(localStorage.getItem(CKEY)||'null')}catch(e){return null}}
+function setCurrent(v){if(v)localStorage.setItem(CKEY,JSON.stringify(v));else localStorage.removeItem(CKEY);}
+function queries(){return Number(localStorage.getItem(QKEY)||0)}
+function saveQueries(n){localStorage.setItem(QKEY,String(n))}
+function ensureOwner(){return null}
+function sync(){
+ const us=users(), me=current();
+ const premium=us.filter(x=>x.premium).length, active=me?1:0;
+ document.getElementById('statUsers').textContent=us.length;
+ document.getElementById('statPremium').textContent=premium;
+ document.getElementById('statActive').textContent=active;
+ document.getElementById('statQueries').textContent=queries();
+ document.getElementById('statUserNote').textContent=us.length?us.map(x=>x.username).slice(0,3).join(' • ')+(us.length>3?' …':''):'Henüz kayıt yok';
+ const name=me?me.username:'Misafir', role=me?(me.role==='Kurucu'?'Kurucu':me.premium?'Premium Kullanıcı':'Kullanıcı'):'Giriş yapılmadı';
+ document.getElementById('dashUser').textContent=name; document.getElementById('dashRole').textContent=role;
+ document.getElementById('dashWelcome').textContent=me?('Hoş geldin, '+name):'Henüz giriş yapılmadı';
+ document.getElementById('dashAvatar').textContent=(name[0]||'?').toUpperCase();
+ document.getElementById('sideUser').textContent=name; document.getElementById('sideRole').textContent=me?(role+(me.premium?' • Premium açık':'')):'Kullanıcı girişi bekleniyor';
+ const isOwner=!!me&&me.role==='Kurucu'; document.getElementById('ownerBox').hidden=!isOwner; document.getElementById('ownerMenuBtn').hidden=!isOwner;
+ if(isOwner) renderOwnerUsers();
+ const login=document.getElementById('loginBtn'), reg=document.getElementById('registerBtn');
+ if(me){login.textContent='ÇIKIŞ';reg.textContent='HESABIM';login.onclick=logout;reg.onclick=()=>showAccount();}else{login.textContent='GİRİŞ';reg.textContent='KAYIT';login.onclick=()=>accountModal('login');reg.onclick=()=>accountModal('register');}
+}
+function accountModal(type){
+ const modal=document.getElementById('modal'), title=document.getElementById('modalTitle'), content=document.getElementById('modalContent');
+ title.textContent=type==='register'?'KAYIT OL':'GİRİŞ YAP';
+ content.innerHTML=type==='register'?`<label class="field">Kullanıcı adı<input id="vUser" autocomplete="username"></label><label class="field">E-posta<input id="vEmail" type="email"></label><label class="field">Şifre<input id="vPass" type="password" autocomplete="new-password"></label><label class="field">Kurucu doğrulama kodu (sadece sahip)<input id="vOwner" type="password" placeholder="Normal kullanıcı boş bırakır"></label><button type="button" class="btn" id="vSubmit">KAYIT OL</button><div class="auth-note">Normal hesapların rolü <b>Kullanıcı</b> olur. Kurucu hesabı yalnızca sahip için özel doğrulamayla açılır.</div>`:`<label class="field">Kullanıcı adı<input id="vUser" autocomplete="username"></label><label class="field">Şifre<input id="vPass" type="password" autocomplete="current-password"></label><button type="button" class="btn" id="vSubmit">GİRİŞ YAP</button><div class="auth-note">Bu sürüm demo amaçlı yerel hesap kullanır.</div>`;
+ modal.classList.add('show');
+ document.getElementById('vSubmit').onclick=()=>{
+  const u=(document.getElementById('vUser').value||'').trim(); if(!u)return toast('Kullanıcı adı gerekli.');
+  let us=users(), found=us.find(x=>x.username.toLowerCase()===u.toLowerCase());
+  if(type==='register'){
+   const ownerCode=(document.getElementById('vOwner')?.value||'').trim(); const isOwner=u.toLowerCase()===OWNER && ownerCode==='ALEXIX-KURUCU';
+   if(found){
+    if(isOwner){found.role='Kurucu';found.premium=true;found.lastLogin=new Date().toISOString();saveUsers(us);setCurrent(found);closeModal();sync();toast('Kurucu yetkisi açıldı.');return;}
+    return toast('Bu kullanıcı adı zaten kayıtlı.');
+   }
+   const rec={username:u,email:(document.getElementById('vEmail')?.value||'').trim(),role:isOwner?'Kurucu':'Kullanıcı',premium:isOwner,createdAt:new Date().toISOString(),lastLogin:new Date().toISOString()};
+   us.push(rec);saveUsers(us);setCurrent(rec);closeModal();sync();toast(isOwner?'Kurucu hesabı açıldı.':'Kayıt tamamlandı. Rol: Kullanıcı');
+  }else{
+   found=us.find(x=>x.username.toLowerCase()===u.toLowerCase()); if(!found)return toast('Hesap bulunamadı. Önce kayıt ol.');
+   found.lastLogin=new Date().toISOString();saveUsers(us);setCurrent(found);closeModal();sync();toast('Giriş yapıldı: '+(found.role==='Kurucu'?'Kurucu':found.premium?'Premium Kullanıcı':'Kullanıcı'));
+  }
+ };
+}
+function showAccount(){const me=current();const m=document.getElementById('modal');document.getElementById('modalTitle').textContent='HESABIM';document.getElementById('modalContent').innerHTML=`<div class="purchase-box"><h3>${me.username}</h3><p>Rol: <b>${me.role}</b><br>Premium: <b>${me.premium?'AÇIK':'KAPALI'}</b></p><div class="logged-actions"><button type="button" id="accClose">KAPAT</button><button type="button" class="danger" id="accLogout">ÇIKIŞ YAP</button></div></div>`;m.classList.add('show');document.getElementById('accClose').onclick=()=>m.classList.remove('show');document.getElementById('accLogout').onclick=logout;}
+function logout(){setCurrent(null);sync();document.getElementById('modal').classList.remove('show');toast('Çıkış yapıldı.');}
+function renderOwnerUsers(){const box=document.getElementById('ownerUsers');if(!box)return;const me=current();const us=users();box.innerHTML=us.map((u,i)=>`<div class="owner-user"><div><b>${u.username}</b><small>${u.role}${u.premium?' • Premium açık':' • Premium kapalı'}</small></div><div class="owner-actions">${u.username.toLowerCase()===OWNER?'<span class="tag premium">KURUCU</span>':`<button class="mini-action ${u.premium?'prem':''}" data-prem="${i}">${u.premium?'PREMIUM KAPAT':'PREMIUM AÇ'}</button>`}</div></div>`).join('');box.querySelectorAll('[data-prem]').forEach(b=>b.onclick=()=>{const arr=users(),i=Number(b.dataset.prem);arr[i].premium=!arr[i].premium;saveUsers(arr);const me=current();if(me&&me.username.toLowerCase()===arr[i].username.toLowerCase())setCurrent(arr[i]);sync();toast(arr[i].premium?'Premium açıldı: '+arr[i].username:'Premium kapatıldı: '+arr[i].username);});}
+function preview(){const free=document.getElementById('freePreview'), prem=document.getElementById('premiumPreview');if(!free||!prem)return;const names=[...document.querySelectorAll('#commandsList .cmd')];const items=names.map(x=>({text:x.querySelector('code')?.textContent||'',desc:x.querySelector('small')?.textContent||'',n:Number((x.querySelector('.cmd-no')?.textContent||'#0').replace('#',''))}));const f=items.filter(x=>x.n<=30).slice(0,6),p=items.filter(x=>x.n>30).slice(0,6);free.innerHTML=f.map(x=>`<div class="preview-cmd"><code>${x.text}</code><br><span>${x.desc}</span></div>`).join('')||'<div class="preview-cmd">Free komutları Komutlar bölümünden aç.</div>';prem.innerHTML=p.map(x=>`<div class="preview-cmd"><code>${x.text}</code><br><span>${x.desc}</span></div>`).join('')||'<div class="preview-cmd premium-lock">Premium komutları Komutlar bölümünden aç.</div>';}
+function protectPremium(){
+ const oldRun=window.runCommand;
+ // Existing command buttons call the internal runCommand, so gate at click level instead.
+ const list=document.getElementById('commandsList'); if(!list||list.dataset.gated)return;list.dataset.gated='1';
+ list.addEventListener('click',e=>{const b=e.target.closest('.run');if(!b)return;const item=b.closest('.cmd');const no=Number((item.querySelector('.cmd-no')?.textContent||'#0').replace('#',''));if(no>30){const me=current();if(!me||!me.premium){e.stopImmediatePropagation();e.preventDefault();toast('Bu komut Premium yetkisi gerektirir.');return;} }saveQueries(queries()+1);setTimeout(sync,50);},{capture:true});
+}
+function init(){
+ ensureOwner();
+ sync();
+ document.getElementById('tier')?.addEventListener('change',()=>setTimeout(preview,30));
+ document.getElementById('search')?.addEventListener('input',()=>setTimeout(preview,30));
+ document.getElementById('category')?.addEventListener('change',()=>setTimeout(preview,30));
+ document.querySelectorAll('[data-scroll]').forEach(b=>b.onclick=()=>document.getElementById(b.dataset.scroll)?.scrollIntoView({behavior:'smooth'}));
+ document.getElementById('ownerMenuBtn')?.addEventListener('click',()=>document.getElementById('ownerBox')?.scrollIntoView({behavior:'smooth'}));
+ setTimeout(()=>{preview();protectPremium();sync()},150);
+}
+window.alexixAccountSync=sync;
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
+
+<script id="alexix-login-fix">
+(function(){
+'use strict';
+const OWNER='alexixbaba', OWNER_CODE='ALEXIX-KURUCU';
+const UKEY='alexixUsersV2', CKEY='alexixCurrentV2';
+const $=id=>document.getElementById(id);
+function getUsers(){try{return JSON.parse(localStorage.getItem(UKEY)||'[]')}catch(e){return[]}}
+function saveUsers(v){localStorage.setItem(UKEY,JSON.stringify(v))}
+function setCurrent(v){if(v)localStorage.setItem(CKEY,JSON.stringify(v));else localStorage.removeItem(CKEY)}
+function close(){ $('modal')?.classList.remove('show') }
+function notify(msg){if(typeof window.toast==='function')window.toast(msg);else alert(msg)}
+function refresh(){try{window.alexixAccountSync?.()}catch(e){}}
+function openAuth(type){
+ const m=$('modal'); if(!m)return;
+ $('modalTitle').textContent=type==='login'?'GİRİŞ YAP':'KAYIT OL';
+ $('modalContent').innerHTML=type==='login'
+ ? `<label class="field">Kullanıcı adı<input id="vUser" autocomplete="username" placeholder="Kullanıcı adınız"></label>
+    <label class="field">Şifre<input id="vPass" type="password" autocomplete="current-password" placeholder="Şifreniz"></label>
+    <button type="button" class="btn" id="vSubmit">GİRİŞ YAP</button>`
+ : `<label class="field">Kullanıcı adı<input id="vUser" autocomplete="username" placeholder="Kullanıcı adı"></label>
+    <label class="field">E-posta<input id="vEmail" type="email" autocomplete="email" placeholder="E-posta"></label>
+    <label class="field">Şifre<input id="vPass" type="password" autocomplete="new-password" placeholder="Şifre"></label>
+    <label class="field">Kurucu doğrulama kodu <span style="opacity:.65">(sadece sahip)</span><input id="vOwner" type="password" placeholder="Normal kullanıcı boş bırakır"></label>
+    <button type="button" class="btn" id="vSubmit">KAYIT OL</button>`;
+ m.classList.add('show');
+ $('vSubmit').onclick=function(){
+   const u=($('vUser')?.value||'').trim(), pass=$('vPass')?.value||'';
+   if(!u)return notify('Kullanıcı adı gerekli.');
+   if(!pass)return notify('Şifre gerekli.');
+   let us=getUsers();
+   const idx=us.findIndex(x=>(x.username||'').toLowerCase()===u.toLowerCase());
+   const ownerLogin=u.toLowerCase()===OWNER && pass===OWNER_CODE;
+   if(type==='login'){
+      if(ownerLogin){
+        let rec=idx>=0?us[idx]:{username:OWNER,email:'',createdAt:new Date().toISOString()};
+        rec.username=OWNER; rec.password=OWNER_CODE; rec.role='Kurucu'; rec.premium=true; rec.lastLogin=new Date().toISOString();
+        if(idx<0)us.push(rec); else us[idx]=rec;
+        saveUsers(us); setCurrent(rec); close(); refresh(); notify('Kurucu olarak giriş yapıldı.'); return;
+      }
+      if(idx<0)return notify('Hesap bulunamadı. Önce KAYIT ol.');
+      const rec=us[idx];
+      if(rec.password && rec.password!==pass)return notify('Şifre hatalı.');
+      rec.password=pass; rec.lastLogin=new Date().toISOString();
+      us[idx]=rec; saveUsers(us); setCurrent(rec); close(); refresh();
+      notify('Giriş başarılı: '+(rec.role==='Kurucu'?'Kurucu':rec.premium?'Premium Kullanıcı':'Kullanıcı')); return;
+   }
+   if(idx>=0)return notify('Bu kullanıcı adı zaten kayıtlı.');
+   const ownerCode=($('vOwner')?.value||'').trim();
+   const isOwner=u.toLowerCase()===OWNER && ownerCode===OWNER_CODE;
+   const rec={username:u,email:($('vEmail')?.value||'').trim(),password:pass,role:isOwner?'Kurucu':'Kullanıcı',premium:isOwner,createdAt:new Date().toISOString(),lastLogin:new Date().toISOString()};
+   us.push(rec);saveUsers(us);setCurrent(rec);close();refresh();notify(isOwner?'Kurucu hesabı oluşturuldu.':'Kayıt başarılı. Rol: Kullanıcı');
+ };
+}
+function bind(){
+ $('loginBtn')?.addEventListener('click',e=>{e.preventDefault();openAuth('login')});
+ $('registerBtn')?.addEventListener('click',e=>{e.preventDefault();openAuth('register')});
+ $('panelLoginBtn')?.addEventListener('click',e=>{e.preventDefault();openAuth('login')});
+ $('modalClose')?.addEventListener('click',close);
+ $('modal')?.addEventListener('click',e=>{if(e.target===$('modal'))close()});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
+})();
+</script>
+
+
+<script id="alexix-horror-js">
+(function(){
+'use strict';
+function startNightmare(){
+ const c=document.getElementById('horrorCanvas'); if(!c)return;
+ const ctx=c.getContext('2d'); let w=0,h=0,dots=[];
+ function resize(){w=c.width=innerWidth*devicePixelRatio;h=c.height=innerHeight*devicePixelRatio;ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);w=innerWidth;h=innerHeight;dots=Array.from({length:Math.min(75,Math.max(25,Math.floor(w/18)))},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.4+.25,v:Math.random()*.25+.05,a:Math.random()*.45+.08}));}
+ resize(); addEventListener('resize',resize,{passive:true});
+ let t=0;
+ function frame(){t+=.008;ctx.clearRect(0,0,w,h);
+   for(const p of dots){p.y-=p.v;if(p.y<0)p.y=h;const pulse=(Math.sin(t*2+p.x*.02)+1)/2;ctx.beginPath();ctx.fillStyle='rgba(255,25,55,'+(p.a*(.45+.55*pulse))+')';ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();}
+   if(Math.random()<.012){ctx.fillStyle='rgba(255,20,45,.035)';ctx.fillRect(0,Math.random()*h,w,1+Math.random()*5);}
+   requestAnimationFrame(frame);
+ }
+ frame();
+ // rare, subtle screen flicker for the horror aesthetic
+ setInterval(()=>{if(document.hidden)return;document.body.classList.add('micro-flicker');setTimeout(()=>document.body.classList.remove('micro-flicker'),55)},5200+Math.random()*4000);
+}
+const style=document.createElement('style');style.textContent='.micro-flicker{filter:brightness(1.12)}';document.head.appendChild(style);
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',startNightmare,{once:true});else startNightmare();
+})();
+</script>
+</body></html>
